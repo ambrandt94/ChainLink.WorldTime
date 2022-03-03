@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd4356f16cbae04a92ffadfcd61902e, type: 3}
+  m_Name: WorldTimeProfile
+  m_EditorClassIdentifier: 
+  Profile:
+    TimelineEras:
+    - Name: Pre-History
+      StartPoint:
+        Year: 0
+        Month: 0
+        Day: 0
+        Time: 0
+    - Name: BC
+      StartPoint:
+        Year: 10000
+        Month: 0
+        Day: 0
+        Time: 0
+    - Name: AD
+      StartPoint:
+        Year: 18000
+        Month: 0
+        Day: 0
+        Time: 0
+    MonthsInYear:
+    - MonthName: January
+      DaysInMonth: 31
+    - MonthName: February
+      DaysInMonth: 30
+    - MonthName: March
+      DaysInMonth: 31
+    - MonthName: April
+      DaysInMonth: 30
+    - MonthName: May
+      DaysInMonth: 31
+    - MonthName: June
+      DaysInMonth: 30
+    - MonthName: July
+      DaysInMonth: 31
+    - MonthName: August
+      DaysInMonth: 30
+    - MonthName: September
+      DaysInMonth: 31
+    - MonthName: October
+      DaysInMonth: 31
+    - MonthName: November
+      DaysInMonth: 30
+    - MonthName: December
+      DaysInMonth: 31
+    DaysInWeek:
+    - DayName: Sunday
+    - DayName: Monday
+    - DayName: Tuesday
+    - DayName: Wednesday
+    - DayName: Thursday
+    - DayName: Friday
+    - DayName: Saturday
+    TimesOfDay:
+    - TimeOfDay: Dawn
+    - TimeOfDay: Morning
+    - TimeOfDay: Afternoon
+    - TimeOfDay: Evening
+    - TimeOfDay: Dusk
+    - TimeOfDay: Night
