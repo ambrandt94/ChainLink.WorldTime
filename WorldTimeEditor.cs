@@ -24,38 +24,54 @@ namespace ChainWorldTime
         {
             if (Target != null)
             {
-                //Target.ProfileAsset = (WorldTimeAsset)(EditorGUILayout.ObjectField((Object)Target.ProfileAsset, typeof(Object), true));
-                WorldTimeEra era = Target.CurrentEra;
-                if(era != null)
-                    EditorGUILayout.LabelField("Current Era: " + era.Name + " | Year " + (Target.ProfileAsset.Profile.GetYearOfEra(Target.CurrentYear) + 1).ToString());
-                else
-                    EditorGUILayout.LabelField("Current Era: None");
-
-                EditorGUILayout.LabelField("Current Year: " + (Target.CurrentYear + 1).ToString());
-
-                WorldTimeMonth month = Target.CurrentMonth;
-                string monthString = "Current Month: " + (Target.CurrentMonthIndex + 1).ToString();
-                if (month != null)
-                    monthString += "[" + month.MonthName + "]";
-                EditorGUILayout.LabelField(monthString);
-
-                EditorGUILayout.LabelField("Current Week: " + (Target.CurrentWeek + 1).ToString());
-
-                WorldTimeDay day = Target.CurrentDay;
-                string dayString = "Current Day: " + (Target.CurrentDayIndex + 1).ToString();
-                if (day != null)
-                    dayString += "[" + day.DayName + "]";
-                EditorGUILayout.LabelField(dayString);
-
-                WorldTimeOfDay timeOfDay = Target.TimeOfDay;
-                string timeString = "Time: " + (Target.TimeOfDayIndex+1).ToString();
-                if (timeOfDay != null)
-                    timeString += "[" + timeOfDay.TimeOfDay + "]";
-
-                EditorGUILayout.LabelField(timeString);
+                DrawEraData();
+                DrawMonthData();
+                DrawDayData();
+                DrawTimeOfDayData();
 
                 DrawModificationButtons();
             }
+        }
+
+        void DrawEraData()
+        {
+            WorldTimeEra era = Target.CurrentEra;
+            if (era != null)
+                EditorGUILayout.LabelField("Current Era: " + era.Name + " | Year " + (Target.ProfileAsset.Profile.GetYearOfEra(Target.CurrentYear) + 1).ToString());
+            else
+                EditorGUILayout.LabelField("Current Era: None");
+
+            EditorGUILayout.LabelField("Current Year: " + (Target.CurrentYear + 1).ToString());
+        }
+
+        void DrawMonthData()
+        {
+            WorldTimeMonth month = Target.CurrentMonth;
+            string monthString = "Current Month: " + (Target.CurrentMonthIndex + 1).ToString();
+            if (month != null)
+                monthString += "[" + month.MonthName + "]";
+            EditorGUILayout.LabelField(monthString);
+        }
+
+        void DrawDayData()
+        {
+            EditorGUILayout.LabelField("Current Week: " + (Target.CurrentWeek + 1).ToString());
+
+            WorldTimeDay day = Target.CurrentDay;
+            string dayString = "Current Day: " + (Target.CurrentDayIndex + 1).ToString();
+            if (day != null)
+                dayString += "[" + day.DayName + "]";
+            EditorGUILayout.LabelField(dayString);
+        }
+
+        void DrawTimeOfDayData()
+        {
+            WorldTimeOfDay timeOfDay = Target.TimeOfDay;
+            string timeString = "Time: " + (Target.TimeOfDayIndex + 1).ToString();
+            if (timeOfDay != null)
+                timeString += "[" + timeOfDay.TimeOfDay + "]";
+
+            EditorGUILayout.LabelField(timeString);
         }
 
         void DrawModificationButtons()
