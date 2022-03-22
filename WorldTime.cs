@@ -50,16 +50,9 @@ namespace ChainWorldTime
             {
                 if (ProfileAsset == null)
                     return null;
-
-                if (ProfileAsset.Profile.MonthsInYear != null && ProfileAsset.Profile.MonthsInYear.Count > 0)
-                {
-                    int monthOfYear = (CurrentMonthIndex) % ProfileAsset.Profile.MonthsInYear.Count;
-                    if (monthOfYear >= 0 && monthOfYear <= ProfileAsset.Profile.MonthsInYear.Count)
-                        return ProfileAsset.Profile.MonthsInYear[monthOfYear];
-                }
-                return null;
+                return ProfileAsset.Profile.GetMonth(CurrentMonthIndex);
             }
-        }
+        }        
         [HideInInspector]
         public int CurrentMonthIndex;
 
@@ -67,24 +60,37 @@ namespace ChainWorldTime
         public int CurrentWeek;
 
         [HideInInspector]
-        public WorldTimeDay CurrentDay
+        public WorldTimeDay CurrentDay => GetDayOfMonth(CurrentDayIndex);
+        public WorldTimeDay GetDayOfMonth(int index)
         {
-            get
-            {
-                if (ProfileAsset == null)
-                    return null;
-                return ProfileAsset.Profile.GetDayPrecise(CurrentMonthIndex, CurrentDayIndex, CurrentYear);
-                if (ProfileAsset.Profile.DaysInWeek != null && ProfileAsset.Profile.DaysInWeek.Count > 0)
-                {
-                    int dayOfWeek = (CurrentDayIndex) % ProfileAsset.Profile.DaysInWeek.Count;
-                    if (dayOfWeek >= 0 && dayOfWeek <= ProfileAsset.Profile.DaysInWeek.Count)
-                        return ProfileAsset.Profile.DaysInWeek[dayOfWeek];
-                }
+            if (ProfileAsset == null)
                 return null;
-            }
+            return ProfileAsset.Profile.GetDayPrecise(CurrentMonthIndex, index, CurrentYear);
         }
         [HideInInspector]
         public int CurrentDayIndex;
+        public int DaysInTheWeek
+        {
+            get
+            {
+                return ProfileAsset.Profile.DaysInWeek.Count;
+            }
+        }
+        public int DayOfTheWeekIndex
+        {
+            get => GetDayOfTheWeek(CurrentDayIndex);
+        }
+        public int GetDayOfTheWeekPrecise(int day)
+        {
+            return ProfileAsset.Profile.GetDayOfTheWeekPrecise(CurrentMonthIndex, day , CurrentYear);
+        }
+        public int GetDayOfTheWeek(int day)
+        {
+            if (ProfileAsset == null)
+                return -1;
+
+            return CurrentDayIndex % ProfileAsset.Profile.DaysInWeek.Count;
+        }
 
         [HideInInspector]
         public WorldTimeOfDay TimeOfDay
@@ -105,6 +111,46 @@ namespace ChainWorldTime
         }
         [HideInInspector]
         public int TimeOfDayIndex;
+        public float TimeOfDayRatio => (float)TimeOfDayIndex/(float)ProfileAsset.Profile.TimesOfDay.Count;
+        public float PreciseTimeOfDayRatio
+        {
+            get
+            {
+                float totalTime = TotalSecondsInSegments * ProfileAsset.Profile.TimesOfDay.Count;
+                float currentTime = TimeOfDayIndex * TotalSecondsInSegments;
+                currentTime += SecondsInSegment;
+                return currentTime / totalTime;
+            }
+        }
+
+        [HideInInspector]
+        public float TotalSecondsInSegments = 60;
+        [HideInInspector]
+        public float SecondsInSegment
+        {
+            get => _SecondsInSegment;
+            set
+            {
+                if (_SecondsInSegment != value)
+                {
+                    _SecondsInSegment = value;
+                    OnPreciseTimeOfDayUpdated.Invoke();
+                }
+            }
+        }
+        float _SecondsInSegment;
+        [HideInInspector]
+        public float TimeSpeedModifier = 1;
+        [HideInInspector]
+        public bool TimeIsActive;
+        [HideInInspector]
+        public float TimeSegmentRatio => SecondsInSegment / TotalSecondsInSegments;
+
+        public Action OnTimeOfDayUpdated;
+        public Action OnPreciseTimeOfDayUpdated;
+        public Action OnDayUpdated;
+        public Action OnMonthUpdated;
+        public Action OnYearUpdated;
         #endregion
 
         private void Awake()
@@ -118,12 +164,31 @@ namespace ChainWorldTime
             DontDestroyOnLoad(this.gameObject);
         }
 
+        private void Update()
+        {
+            if (TimeIsActive && TotalSecondsInSegments > 0)
+                HandleActiveTime();
+        }
+
+        void HandleActiveTime()
+        {
+            SecondsInSegment += Time.deltaTime * TimeSpeedModifier;
+            if (SecondsInSegment > TotalSecondsInSegments)
+            { 
+                AdvanceTimeOfDay();
+            }
+        }
+
         public void SetWorldTime(WorldTimePoint timePoint)
         {
             TimeOfDayIndex = timePoint.Time;
             CurrentDayIndex = timePoint.Day;
             CurrentMonthIndex = timePoint.Month;
             CurrentYear = timePoint.Year;
+            OnTimeOfDayUpdated?.Invoke();
+            OnDayUpdated?.Invoke();
+            OnMonthUpdated?.Invoke();
+            OnYearUpdated?.Invoke();
         }
 
         #region Day Time Adjustment
@@ -137,11 +202,13 @@ namespace ChainWorldTime
 
                     if (TimeOfDayIndex >= ProfileAsset.Profile.TimesOfDay.Count)
                     {
-                        AdvanceDay();
                         TimeOfDayIndex = 0;
+                        AdvanceDay();
                     }
                 }
             }
+            OnTimeOfDayUpdated?.Invoke();
+            SecondsInSegment = 0;
         }
         public void DecreaseTimeOfDay()
         {
@@ -150,9 +217,10 @@ namespace ChainWorldTime
                 TimeOfDayIndex--;
                 if (TimeOfDayIndex < 0)
                 {
-                    DecreaseDay();
                     TimeOfDayIndex = ProfileAsset.Profile.TimesOfDay.Count - 1;
+                    DecreaseDay();
                 }
+                OnTimeOfDayUpdated?.Invoke();
             }
         }
         public void AdjustTimeOfDay(int adjustmentAmount)
@@ -173,9 +241,10 @@ namespace ChainWorldTime
                 CurrentDayIndex ++;
                 if (CurrentDayIndex >= CurrentMonth.DaysInMonth)
                 {
-                    AdvanceMonth();
                     CurrentDayIndex = 0;
+                    AdvanceMonth();
                 }
+                OnDayUpdated?.Invoke();
             }
         }
         public void DecreaseDay()
@@ -188,7 +257,8 @@ namespace ChainWorldTime
                     DecreaseMonth();
                     CurrentDayIndex = CurrentMonth.DaysInMonth - 1;
                 }
-            } 
+                OnDayUpdated?.Invoke();
+            }
         }
         public void AdjustDay(int adjustmentAmount)
         {
@@ -208,12 +278,14 @@ namespace ChainWorldTime
                 CurrentMonthIndex++;
                 if (CurrentMonthIndex >= ProfileAsset.Profile.MonthsInYear.Count)
                 {
-                    AdvanceYear();
                     CurrentMonthIndex = 0;
+                    AdvanceYear();
                 }
 
-                if (CurrentMonth.DaysInMonth >= CurrentDayIndex)
+                if (CurrentDayIndex >= CurrentMonth.DaysInMonth)
                     CurrentDayIndex = CurrentMonth.DaysInMonth - 1;
+                
+                OnMonthUpdated?.Invoke();
             }
             else
                 Debug.LogError("World Time Asset was Null");
@@ -225,9 +297,14 @@ namespace ChainWorldTime
                 CurrentMonthIndex--;
                 if (CurrentMonthIndex < 0)
                 {
-                    DecreaseYear();
                     CurrentMonthIndex = ProfileAsset.Profile.MonthsInYear.Count - 1;
+                    DecreaseYear();
                 }
+
+                if (CurrentDayIndex >= CurrentMonth.DaysInMonth)
+                    CurrentDayIndex = CurrentMonth.DaysInMonth - 1;
+
+                OnMonthUpdated?.Invoke();                
             }
         }
         public void AdjustMonth(int adjustmentAmount)
@@ -244,12 +321,14 @@ namespace ChainWorldTime
         public void AdvanceYear()
         {
             CurrentYear++;
+            OnYearUpdated?.Invoke();
         }
         public void DecreaseYear()
         {
             CurrentYear--;
             if (CurrentYear < 0)
                 CurrentYear = 0;
+            OnYearUpdated?.Invoke();
         }
         public void AdjustYear(int adjustment)
         {
@@ -273,6 +352,25 @@ namespace ChainWorldTime
             for (int i = 0; i < point.Year; i++)
             {
                 AdvanceYear();
+            }
+        }
+        public void DecreaseTime(WorldTimePoint point)
+        {
+            for (int i = 0; i < point.Time; i++)
+            {
+                DecreaseTimeOfDay();
+            }
+            for (int i = 0; i < point.Day; i++)
+            {
+                DecreaseDay();
+            }
+            for (int i = 0; i < point.Month; i++)
+            {
+                DecreaseMonth();
+            }
+            for (int i = 0; i < point.Year; i++)
+            {
+                DecreaseYear();
             }
         }
         #endregion
@@ -344,6 +442,23 @@ namespace ChainWorldTime
             returnString += CurrentYear;
 
             return returnString;
+        }
+        public string GetYearEraString(int year)
+        {
+            string returnValue = "";
+
+            if (ProfileAsset == null)
+                return returnValue;
+            if (ProfileAsset.Profile == null)
+                return returnValue;
+            returnValue += (ProfileAsset.Profile.GetYearOfEra(year) + 1).ToString() + " - ";
+            WorldTimeEra era = ProfileAsset.Profile.GetEra(new WorldTimePoint(year,0,0,0));
+            if (era != null)
+                returnValue += era.Suffix;
+            else
+                Debug.LogError("Era not found");
+
+            return returnValue;
         }
     }    
 }

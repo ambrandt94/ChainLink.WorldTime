@@ -109,6 +109,22 @@ namespace ChainWorldTime
             totalDays += (day);
             return GetDayOfWeek(totalDays % DaysInWeek.Count);
         }
+        public int GetDayOfTheWeekPrecise(int month, int day, int year)
+        {
+            int totalDays = 0;
+            if (year > 0)
+                totalDays += year * DaysInYear;
+            for (int i = 0; i < month; i++)
+            {
+                WorldTimeMonth timeMonth = GetMonth(i);
+                if (timeMonth != null)
+                {
+                    totalDays += timeMonth.DaysInMonth;
+                }
+            }
+            totalDays += (day);
+            return totalDays % DaysInWeek.Count;
+        }
         public WorldTimeOfDay GetTimeOfDay(int index)
         {
             if (TimesOfDay != null)
@@ -125,6 +141,7 @@ namespace ChainWorldTime
     public class WorldTimeEra
     {
         public string Name;
+        public string Suffix;
         public WorldTimePoint StartPoint;
     }
 

@@ -24,6 +24,8 @@ namespace ChainWorldTime
             Time = dayTime;
         }
 
+        public static WorldTimePoint Zero => new WorldTimePoint(0,0,0,0);
+
         public string GetDateString(WorldTimeProfile profile)
         {
             string returnString = "";

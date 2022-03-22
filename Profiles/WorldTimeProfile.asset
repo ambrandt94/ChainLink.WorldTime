@@ -15,18 +15,21 @@ MonoBehaviour:
   Profile:
     TimelineEras:
     - Name: Pre-History
+      Suffix: 
       StartPoint:
         Year: 0
         Month: 0
         Day: 0
         Time: 0
     - Name: BC
+      Suffix: BC
       StartPoint:
         Year: 10000
         Month: 0
         Day: 0
         Time: 0
     - Name: AD
+      Suffix: AD
       StartPoint:
         Year: 18000
         Month: 0

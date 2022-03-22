@@ -15,24 +15,28 @@ MonoBehaviour:
   Profile:
     TimelineEras:
     - Name: Pre-History
+      Suffix: 0
       StartPoint:
         Year: 0
         Month: 0
         Day: 0
         Time: 0
     - Name: First Age
+      Suffix: I
       StartPoint:
         Year: 25000
         Month: 0
         Day: 0
         Time: 0
     - Name: Second Age
+      Suffix: II
       StartPoint:
         Year: 32000
         Month: 0
         Day: 0
         Time: 0
     - Name: Third Age
+      Suffix: III
       StartPoint:
         Year: 48000
         Month: 0

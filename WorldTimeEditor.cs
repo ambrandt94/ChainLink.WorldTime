@@ -28,6 +28,7 @@ namespace ChainWorldTime
                 DrawMonthData();
                 DrawDayData();
                 DrawTimeOfDayData();
+                DrawActiveTimeData();
 
                 DrawModificationButtons();
             }
@@ -59,6 +60,7 @@ namespace ChainWorldTime
 
             WorldTimeDay day = Target.CurrentDay;
             string dayString = "Current Day: " + (Target.CurrentDayIndex + 1).ToString();
+            EditorGUILayout.LabelField("Day of the Week " + (Target.DayOfTheWeekIndex + 1).ToString());
             if (day != null)
                 dayString += "[" + day.DayName + "]";
             EditorGUILayout.LabelField(dayString);
@@ -72,6 +74,13 @@ namespace ChainWorldTime
                 timeString += "[" + timeOfDay.TimeOfDay + "]";
 
             EditorGUILayout.LabelField(timeString);
+        }
+
+        void DrawActiveTimeData()
+        {
+            Target.TotalSecondsInSegments = EditorGUILayout.FloatField("Seconds in Segments:", Target.TotalSecondsInSegments);
+            Target.TimeIsActive = EditorGUILayout.Toggle("Time Active:", Target.TimeIsActive);
+            EditorGUILayout.LabelField("Day Ratio: " + Target.PreciseTimeOfDayRatio.ToString("0.000"));
         }
 
         void DrawModificationButtons()
