@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace ChainWorldTime.Calendar
+namespace ChainLink.WorldTime.Calendar
 {
     public class CalendarMonthPage : MonoBehaviour
     {

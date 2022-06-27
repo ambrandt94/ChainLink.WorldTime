@@ -6,7 +6,7 @@ using UnityEditor.PackageManager.UI;
 using UnityEditor;
 #endif
 
-namespace ChainWorldTime
+namespace ChainLink.WorldTime
 {
 #if UNITY_EDITOR
     [CustomEditor(typeof(WorldTime))]

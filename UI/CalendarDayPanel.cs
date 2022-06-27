@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ChainWorldTime.Calendar
+namespace ChainLink.WorldTime.Calendar
 {
     public class CalendarDayPanel : MonoBehaviour
     {

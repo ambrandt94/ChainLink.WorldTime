@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ChainWorldTime
+namespace ChainLink.WorldTime
 {
     [Serializable]
     public class WorldTimeProfile

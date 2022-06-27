@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Experimental.AI;
 using Random = UnityEngine.Random;
 
-namespace ChainWorldTime
+namespace ChainLink.WorldTime
 {
     public class WorldTime : MonoBehaviour
     {

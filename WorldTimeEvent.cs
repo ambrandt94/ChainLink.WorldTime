@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ChainWorldTime
+namespace ChainLink.WorldTime
 {
     [CreateAssetMenu(fileName = "NewWorldTimeEvent", menuName = "ChainTime/New Event", order = 1)]
     public class WorldTimeEvent : ScriptableObject

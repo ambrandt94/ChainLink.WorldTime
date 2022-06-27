@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace ChainWorldTime
+namespace ChainLink.WorldTime
 {
     public class WorldTimeDisplay : MonoBehaviour
     {
