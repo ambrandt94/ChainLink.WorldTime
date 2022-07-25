@@ -116,6 +116,8 @@ namespace ChainLink.WorldTime
         {
             get
             {
+                if (ProfileAsset == null)
+                    return 0;
                 float totalTime = TotalSecondsInSegments * ProfileAsset.Profile.TimesOfDay.Count;
                 float currentTime = TimeOfDayIndex * TotalSecondsInSegments;
                 currentTime += SecondsInSegment;
@@ -134,7 +136,7 @@ namespace ChainLink.WorldTime
                 if (_SecondsInSegment != value)
                 {
                     _SecondsInSegment = value;
-                    OnPreciseTimeOfDayUpdated.Invoke();
+                    OnPreciseTimeOfDayUpdated?.Invoke();
                 }
             }
         }
@@ -146,6 +148,7 @@ namespace ChainLink.WorldTime
         [HideInInspector]
         public float TimeSegmentRatio => SecondsInSegment / TotalSecondsInSegments;
 
+        public Action OnChange;
         public Action OnTimeOfDayUpdated;
         public Action OnPreciseTimeOfDayUpdated;
         public Action OnDayUpdated;
@@ -162,6 +165,11 @@ namespace ChainLink.WorldTime
 
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+            OnTimeOfDayUpdated += OnChange;
+            OnPreciseTimeOfDayUpdated += OnChange;
+            OnDayUpdated += OnChange;
+            OnMonthUpdated += OnChange;
+            OnYearUpdated += OnChange;
         }
 
         private void Update()
@@ -433,7 +441,7 @@ namespace ChainLink.WorldTime
             }
             if (CurrentDay != null)
             {
-                returnString += CurrentDay.DayName + " " + CurrentDayIndex + ", ";
+                returnString += CurrentDay.DayName + ", ";// + CurrentDayIndex + ", ";
             }
             if (CurrentMonth != null)
             {

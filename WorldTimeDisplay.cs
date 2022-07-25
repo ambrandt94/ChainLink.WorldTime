@@ -14,9 +14,15 @@ namespace ChainLink.WorldTime
         {
             if (WorldTime.Instance != null)
             {
-                if (TimeText != null)
-                    TimeText.SetText(WorldTime.Instance.GetDateString());
+                WorldTime.Instance.OnChange += UpdateDisplay;
+                UpdateDisplay();
             }
+        }
+
+        private void UpdateDisplay()
+        {
+            if (TimeText != null)
+                TimeText.SetText(WorldTime.Instance.GetDateString());
         }
     }
 }
