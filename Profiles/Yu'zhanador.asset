@@ -35,12 +35,12 @@ MonoBehaviour:
     - MonthName: Saalst
       DaysInMonth: 36
     DaysInWeek:
-    - DayName: 1
-    - DayName: 2
-    - DayName: 3
-    - DayName: 4
-    - DayName: 5
-    - DayName: 6
+    - DayName: Day 1
+    - DayName: Day 2
+    - DayName: Day 3
+    - DayName: Day 4
+    - DayName: Day 5
+    - DayName: Day 6
     TimesOfDay:
     - TimeOfDay: Dawn
     - TimeOfDay: Morning

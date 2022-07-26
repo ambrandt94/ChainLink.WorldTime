@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.AI;
 using Random = UnityEngine.Random;
@@ -185,6 +186,9 @@ namespace ChainLink.WorldTime
             { 
                 AdvanceTimeOfDay();
             }
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(this);
+#endif
         }
 
         public void SetWorldTime(WorldTimePoint timePoint)
