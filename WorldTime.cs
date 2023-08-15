@@ -12,12 +12,9 @@ namespace ChainLink.WorldTime
     {
         #region Variables
         private static WorldTime instance = null;
-        public static WorldTime Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
+        public static WorldTime Instance {
+            get {
+                if (instance == null) {
                     instance = (WorldTime)FindObjectOfType(typeof(WorldTime));
                     //if (instance == null)
                     //instance = (new GameObject("WorldTime")).AddComponent<WorldTime>();
@@ -31,10 +28,8 @@ namespace ChainLink.WorldTime
 
         public WorldTimeAsset ProfileAsset;
 
-        public WorldTimeEra CurrentEra
-        {
-            get
-            {
+        public WorldTimeEra CurrentEra {
+            get {
                 if (ProfileAsset != null)
                     if (ProfileAsset.Profile != null)
                         return ProfileAsset.Profile.GetEra(GetCurrentPoint());
@@ -45,15 +40,13 @@ namespace ChainLink.WorldTime
         public int CurrentYear;
 
         [HideInInspector]
-        public WorldTimeMonth CurrentMonth
-        {
-            get
-            {
+        public WorldTimeMonth CurrentMonth {
+            get {
                 if (ProfileAsset == null)
                     return null;
                 return ProfileAsset.Profile.GetMonth(CurrentMonthIndex);
             }
-        }        
+        }
         [HideInInspector]
         public int CurrentMonthIndex;
 
@@ -70,20 +63,17 @@ namespace ChainLink.WorldTime
         }
         [HideInInspector]
         public int CurrentDayIndex;
-        public int DaysInTheWeek
-        {
-            get
-            {
+        public int DaysInTheWeek {
+            get {
                 return ProfileAsset.Profile.DaysInWeek.Count;
             }
         }
-        public int DayOfTheWeekIndex
-        {
+        public int DayOfTheWeekIndex {
             get => GetDayOfTheWeek(CurrentDayIndex);
         }
         public int GetDayOfTheWeekPrecise(int day)
         {
-            return ProfileAsset.Profile.GetDayOfTheWeekPrecise(CurrentMonthIndex, day , CurrentYear);
+            return ProfileAsset.Profile.GetDayOfTheWeekPrecise(CurrentMonthIndex, day, CurrentYear);
         }
         public int GetDayOfTheWeek(int day)
         {
@@ -94,15 +84,12 @@ namespace ChainLink.WorldTime
         }
 
         [HideInInspector]
-        public WorldTimeOfDay TimeOfDay
-        {
-            get
-            {
+        public WorldTimeOfDay TimeOfDay {
+            get {
                 if (ProfileAsset == null)
                     return null;
 
-                if (ProfileAsset.Profile.TimesOfDay != null && ProfileAsset.Profile.TimesOfDay.Count > 0)
-                {
+                if (ProfileAsset.Profile.TimesOfDay != null && ProfileAsset.Profile.TimesOfDay.Count > 0) {
                     int timeOfDay = (TimeOfDayIndex) % ProfileAsset.Profile.TimesOfDay.Count;
                     if (timeOfDay >= 0 && timeOfDay <= ProfileAsset.Profile.TimesOfDay.Count)
                         return ProfileAsset.Profile.TimesOfDay[TimeOfDayIndex];
@@ -112,11 +99,9 @@ namespace ChainLink.WorldTime
         }
         [HideInInspector]
         public int TimeOfDayIndex;
-        public float TimeOfDayRatio => (float)TimeOfDayIndex/(float)ProfileAsset.Profile.TimesOfDay.Count;
-        public float PreciseTimeOfDayRatio
-        {
-            get
-            {
+        public float TimeOfDayRatio => (float)TimeOfDayIndex / (float)ProfileAsset.Profile.TimesOfDay.Count;
+        public float PreciseTimeOfDayRatio {
+            get {
                 if (ProfileAsset == null)
                     return 0;
                 float totalTime = TotalSecondsInSegments * ProfileAsset.Profile.TimesOfDay.Count;
@@ -129,13 +114,10 @@ namespace ChainLink.WorldTime
         [HideInInspector]
         public float TotalSecondsInSegments = 60;
         [HideInInspector]
-        public float SecondsInSegment
-        {
+        public float SecondsInSegment {
             get => _SecondsInSegment;
-            set
-            {
-                if (_SecondsInSegment != value)
-                {
+            set {
+                if (_SecondsInSegment != value) {
                     _SecondsInSegment = value;
                     OnPreciseTimeOfDayUpdated?.Invoke();
                 }
@@ -157,33 +139,10 @@ namespace ChainLink.WorldTime
         public Action OnYearUpdated;
         #endregion
 
-        private void Awake()
-        {
-            if (instance != null && instance != this)
-            {
-                Destroy(this.gameObject);
-            }
-
-            instance = this;
-            DontDestroyOnLoad(this.gameObject);
-            OnTimeOfDayUpdated += OnChange;
-            OnPreciseTimeOfDayUpdated += OnChange;
-            OnDayUpdated += OnChange;
-            OnMonthUpdated += OnChange;
-            OnYearUpdated += OnChange;
-        }
-
-        private void Update()
-        {
-            if (TimeIsActive && TotalSecondsInSegments > 0)
-                HandleActiveTime();
-        }
-
         void HandleActiveTime()
         {
             SecondsInSegment += Time.deltaTime * TimeSpeedModifier;
-            if (SecondsInSegment > TotalSecondsInSegments)
-            { 
+            if (SecondsInSegment > TotalSecondsInSegments) {
                 AdvanceTimeOfDay();
             }
 #if UNITY_EDITOR
@@ -206,14 +165,11 @@ namespace ChainLink.WorldTime
         #region Day Time Adjustment
         public void AdvanceTimeOfDay()
         {
-            if (ProfileAsset != null)
-            {
-                if (ProfileAsset.Profile.TimesOfDay != null && ProfileAsset.Profile.TimesOfDay.Count > 0)
-                {
+            if (ProfileAsset != null) {
+                if (ProfileAsset.Profile.TimesOfDay != null && ProfileAsset.Profile.TimesOfDay.Count > 0) {
                     TimeOfDayIndex++;
 
-                    if (TimeOfDayIndex >= ProfileAsset.Profile.TimesOfDay.Count)
-                    {
+                    if (TimeOfDayIndex >= ProfileAsset.Profile.TimesOfDay.Count) {
                         TimeOfDayIndex = 0;
                         AdvanceDay();
                     }
@@ -224,11 +180,9 @@ namespace ChainLink.WorldTime
         }
         public void DecreaseTimeOfDay()
         {
-            if (ProfileAsset != null)
-            {
+            if (ProfileAsset != null) {
                 TimeOfDayIndex--;
-                if (TimeOfDayIndex < 0)
-                {
+                if (TimeOfDayIndex < 0) {
                     TimeOfDayIndex = ProfileAsset.Profile.TimesOfDay.Count - 1;
                     DecreaseDay();
                 }
@@ -237,8 +191,7 @@ namespace ChainLink.WorldTime
         }
         public void AdjustTimeOfDay(int adjustmentAmount)
         {
-            for (int i = 0; i < Mathf.Abs(adjustmentAmount); i++)
-            {
+            for (int i = 0; i < Mathf.Abs(adjustmentAmount); i++) {
                 if (adjustmentAmount > 0)
                     AdvanceTimeOfDay();
                 else
@@ -248,11 +201,9 @@ namespace ChainLink.WorldTime
 
         public void AdvanceDay()
         {
-            if (ProfileAsset != null)
-            {
-                CurrentDayIndex ++;
-                if (CurrentDayIndex >= CurrentMonth.DaysInMonth)
-                {
+            if (ProfileAsset != null) {
+                CurrentDayIndex++;
+                if (CurrentDayIndex >= CurrentMonth.DaysInMonth) {
                     CurrentDayIndex = 0;
                     AdvanceMonth();
                 }
@@ -261,11 +212,9 @@ namespace ChainLink.WorldTime
         }
         public void DecreaseDay()
         {
-            if (ProfileAsset != null)
-            {
+            if (ProfileAsset != null) {
                 CurrentDayIndex--;
-                if (CurrentDayIndex < 0)
-                {
+                if (CurrentDayIndex < 0) {
                     DecreaseMonth();
                     CurrentDayIndex = CurrentMonth.DaysInMonth - 1;
                 }
@@ -274,8 +223,7 @@ namespace ChainLink.WorldTime
         }
         public void AdjustDay(int adjustmentAmount)
         {
-            for (int i = 0; i < Mathf.Abs(adjustmentAmount); i++)
-            {
+            for (int i = 0; i < Mathf.Abs(adjustmentAmount); i++) {
                 if (adjustmentAmount > 0)
                     AdvanceDay();
                 else
@@ -285,30 +233,25 @@ namespace ChainLink.WorldTime
 
         public void AdvanceMonth()
         {
-            if (ProfileAsset != null)
-            {
+            if (ProfileAsset != null) {
                 CurrentMonthIndex++;
-                if (CurrentMonthIndex >= ProfileAsset.Profile.MonthsInYear.Count)
-                {
+                if (CurrentMonthIndex >= ProfileAsset.Profile.MonthsInYear.Count) {
                     CurrentMonthIndex = 0;
                     AdvanceYear();
                 }
 
                 if (CurrentDayIndex >= CurrentMonth.DaysInMonth)
                     CurrentDayIndex = CurrentMonth.DaysInMonth - 1;
-                
+
                 OnMonthUpdated?.Invoke();
-            }
-            else
+            } else
                 Debug.LogError("World Time Asset was Null");
         }
         public void DecreaseMonth()
         {
-            if (ProfileAsset != null)
-            {
+            if (ProfileAsset != null) {
                 CurrentMonthIndex--;
-                if (CurrentMonthIndex < 0)
-                {
+                if (CurrentMonthIndex < 0) {
                     CurrentMonthIndex = ProfileAsset.Profile.MonthsInYear.Count - 1;
                     DecreaseYear();
                 }
@@ -316,13 +259,12 @@ namespace ChainLink.WorldTime
                 if (CurrentDayIndex >= CurrentMonth.DaysInMonth)
                     CurrentDayIndex = CurrentMonth.DaysInMonth - 1;
 
-                OnMonthUpdated?.Invoke();                
+                OnMonthUpdated?.Invoke();
             }
         }
         public void AdjustMonth(int adjustmentAmount)
         {
-            for (int i = 0; i < Mathf.Abs(adjustmentAmount); i++)
-            {
+            for (int i = 0; i < Mathf.Abs(adjustmentAmount); i++) {
                 if (adjustmentAmount > 0)
                     AdvanceMonth();
                 else
@@ -349,39 +291,31 @@ namespace ChainLink.WorldTime
 
         public void AdvanceTime(WorldTimePoint point)
         {
-            for (int i = 0; i < point.Time; i++)
-            {
+            for (int i = 0; i < point.Time; i++) {
                 AdvanceTimeOfDay();
             }
-            for (int i = 0; i < point.Day; i++)
-            {
+            for (int i = 0; i < point.Day; i++) {
                 AdvanceDay();
             }
-            for (int i = 0; i < point.Month; i++)
-            {
+            for (int i = 0; i < point.Month; i++) {
                 AdvanceMonth();
             }
-            for (int i = 0; i < point.Year; i++)
-            {
+            for (int i = 0; i < point.Year; i++) {
                 AdvanceYear();
             }
         }
         public void DecreaseTime(WorldTimePoint point)
         {
-            for (int i = 0; i < point.Time; i++)
-            {
+            for (int i = 0; i < point.Time; i++) {
                 DecreaseTimeOfDay();
             }
-            for (int i = 0; i < point.Day; i++)
-            {
+            for (int i = 0; i < point.Day; i++) {
                 DecreaseDay();
             }
-            for (int i = 0; i < point.Month; i++)
-            {
+            for (int i = 0; i < point.Month; i++) {
                 DecreaseMonth();
             }
-            for (int i = 0; i < point.Year; i++)
-            {
+            for (int i = 0; i < point.Year; i++) {
                 DecreaseYear();
             }
         }
@@ -410,7 +344,7 @@ namespace ChainLink.WorldTime
             returnTime.CurrentDayIndex = CurrentDayIndex;
             returnTime.TimeOfDayIndex = TimeOfDayIndex;
 
-            returnTime.AdvanceTime(new WorldTimePoint(years,months,days,daySegments));
+            returnTime.AdvanceTime(new WorldTimePoint(years, months, days, daySegments));
 
             return returnTime.GetCurrentPoint();
         }
@@ -423,12 +357,12 @@ namespace ChainLink.WorldTime
             int daySegments;
 
             if (multiYear)
-                years = Random.Range(1,10);
+                years = Random.Range(1, 10);
             if (multiMonth)
-                months = Random.Range(1,10);
+                months = Random.Range(1, 10);
 
-            days = Random.Range(0,10);
-            daySegments = Random.Range(0,10);
+            days = Random.Range(0, 10);
+            daySegments = Random.Range(0, 10);
 
             return new WorldTimePoint(years, months, days, daySegments);
         }
@@ -439,16 +373,13 @@ namespace ChainLink.WorldTime
         {
             string returnString = "";
 
-            if (TimeOfDay != null)
-            {
+            if (TimeOfDay != null) {
                 returnString += TimeOfDay.TimeOfDay + ", ";
             }
-            if (CurrentDay != null)
-            {
+            if (CurrentDay != null) {
                 returnString += CurrentDay.DayName + ", ";// + CurrentDayIndex + ", ";
             }
-            if (CurrentMonth != null)
-            {
+            if (CurrentMonth != null) {
                 returnString += CurrentMonth.MonthName + ", ";
             }
             returnString += CurrentYear;
@@ -464,7 +395,7 @@ namespace ChainLink.WorldTime
             if (ProfileAsset.Profile == null)
                 return returnValue;
             returnValue += (ProfileAsset.Profile.GetYearOfEra(year) + 1).ToString() + " - ";
-            WorldTimeEra era = ProfileAsset.Profile.GetEra(new WorldTimePoint(year,0,0,0));
+            WorldTimeEra era = ProfileAsset.Profile.GetEra(new WorldTimePoint(year, 0, 0, 0));
             if (era != null)
                 returnValue += era.Suffix;
             else
@@ -472,5 +403,26 @@ namespace ChainLink.WorldTime
 
             return returnValue;
         }
-    }    
+
+        private void Awake()
+        {
+            if (instance != null && instance != this) {
+                Destroy(this.gameObject);
+            }
+
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+            OnTimeOfDayUpdated += OnChange;
+            OnPreciseTimeOfDayUpdated += OnChange;
+            OnDayUpdated += OnChange;
+            OnMonthUpdated += OnChange;
+            OnYearUpdated += OnChange;
+        }
+
+        private void Update()
+        {
+            if (TimeIsActive && TotalSecondsInSegments > 0)
+                HandleActiveTime();
+        }
+    }
 }

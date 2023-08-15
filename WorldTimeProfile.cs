@@ -13,13 +13,10 @@ namespace ChainLink.WorldTime
         public List<WorldTimeDay> DaysInWeek;
         public List<WorldTimeOfDay> TimesOfDay;
 
-        public int DaysInYear
-        {
-            get
-            {
+        public int DaysInYear {
+            get {
                 int total = 0;
-                foreach (WorldTimeMonth month in MonthsInYear)
-                {
+                foreach (WorldTimeMonth month in MonthsInYear) {
                     total += month.DaysInMonth;
                 }
                 return total;
@@ -42,8 +39,7 @@ namespace ChainLink.WorldTime
                 return null;
 
             WorldTimeEra returnEra = TimelineEras[0];
-            foreach (WorldTimeEra era in TimelineEras)
-            {
+            foreach (WorldTimeEra era in TimelineEras) {
                 if (point.IsAfter(era.StartPoint))
                     returnEra = era;
             }
@@ -56,12 +52,10 @@ namespace ChainLink.WorldTime
 
             int yearsPassed = 0;
 
-            for (int i = 0; i < TimelineEras.Count; i++)
-            {
+            for (int i = 0; i < TimelineEras.Count; i++) {
                 WorldTimeEra currentEra = GetEra(i);
                 WorldTimeEra nextEra = GetEra(i + 1);
-                if (nextEra == null)
-                {
+                if (nextEra == null) {
                     //yearsPassed = currentEra
                     return totalYear - yearsPassed;
                 }
@@ -75,8 +69,7 @@ namespace ChainLink.WorldTime
         }
         public WorldTimeMonth GetMonth(int index)
         {
-            if (MonthsInYear != null)
-            {
+            if (MonthsInYear != null) {
                 if (MonthsInYear.Count > 0 && index >= 0 && index < MonthsInYear.Count)
                     return MonthsInYear[index];
             }
@@ -85,8 +78,7 @@ namespace ChainLink.WorldTime
         }
         public WorldTimeDay GetDayOfWeek(int index)
         {
-            if (DaysInWeek != null)
-            {
+            if (DaysInWeek != null) {
                 if (DaysInWeek.Count > 0 && index >= 0 && index < DaysInWeek.Count)
                     return DaysInWeek[index];
             }
@@ -98,11 +90,9 @@ namespace ChainLink.WorldTime
             int totalDays = 0;
             if (year > 0)
                 totalDays += year * DaysInYear;
-            for (int i = 0; i < month; i++)
-            {
+            for (int i = 0; i < month; i++) {
                 WorldTimeMonth timeMonth = GetMonth(i);
-                if (timeMonth != null)
-                {
+                if (timeMonth != null) {
                     totalDays += timeMonth.DaysInMonth;
                 }
             }
@@ -114,11 +104,9 @@ namespace ChainLink.WorldTime
             int totalDays = 0;
             if (year > 0)
                 totalDays += year * DaysInYear;
-            for (int i = 0; i < month; i++)
-            {
+            for (int i = 0; i < month; i++) {
                 WorldTimeMonth timeMonth = GetMonth(i);
-                if (timeMonth != null)
-                {
+                if (timeMonth != null) {
                     totalDays += timeMonth.DaysInMonth;
                 }
             }
@@ -127,8 +115,7 @@ namespace ChainLink.WorldTime
         }
         public WorldTimeOfDay GetTimeOfDay(int index)
         {
-            if (TimesOfDay != null)
-            {
+            if (TimesOfDay != null) {
                 if (TimesOfDay.Count > 0 && index >= 0 && index < TimesOfDay.Count)
                     return TimesOfDay[index];
             }
@@ -162,5 +149,8 @@ namespace ChainLink.WorldTime
     public class WorldTimeOfDay
     {
         public string TimeOfDay;
+        public Color StartingLightColor = Color.white;
+        public Color EndingLightColor = Color.white;
+        public float PrimaryLightIntensity = .5f;
     }
 }

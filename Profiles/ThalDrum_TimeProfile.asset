@@ -14,31 +14,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Profile:
     TimelineEras:
-    - Name: Pre-History
-      Suffix: 0
+    - Name: Ethereal Age
+      Suffix: "\u221E"
       StartPoint:
         Year: 0
         Month: 0
         Day: 0
         Time: 0
-    - Name: First Age
+    - Name: Age of the First Kings
       Suffix: I
       StartPoint:
-        Year: 25000
+        Year: 1
         Month: 0
         Day: 0
         Time: 0
-    - Name: Second Age
+    - Name: First Space Age
       Suffix: II
       StartPoint:
-        Year: 32000
+        Year: 40000
         Month: 0
         Day: 0
         Time: 0
-    - Name: Third Age
+    - Name: Linked Age
       Suffix: III
       StartPoint:
-        Year: 48000
+        Year: 56000
+        Month: 0
+        Day: 0
+        Time: 0
+    - Name: Shattered Age
+      Suffix: IV
+      StartPoint:
+        Year: 106000
+        Month: 0
+        Day: 0
+        Time: 0
+    - Name: Second Space Age
+      Suffix: V
+      StartPoint:
+        Year: 136000
+        Month: 0
+        Day: 0
+        Time: 0
+    - Name: Imperial Age
+      Suffix: VI
+      StartPoint:
+        Year: 148000
+        Month: 0
+        Day: 0
+        Time: 0
+    - Name: The Final Age
+      Suffix: VII
+      StartPoint:
+        Year: 180000
         Month: 0
         Day: 0
         Time: 0
@@ -66,8 +94,20 @@ MonoBehaviour:
     - DayName: Phoros
     TimesOfDay:
     - TimeOfDay: Dawn
+      PrimaryLightColor: {r: 0.9716981, g: 0.9313199, b: 0, a: 1}
+      PrimaryLightIntensity: 1
     - TimeOfDay: Morning
+      PrimaryLightColor: {r: 0.9716981, g: 0.9313199, b: 0, a: 1}
+      PrimaryLightIntensity: 1
     - TimeOfDay: Afternoon
+      PrimaryLightColor: {r: 0.9716981, g: 0.9313199, b: 0, a: 1}
+      PrimaryLightIntensity: 1
     - TimeOfDay: Evening
+      PrimaryLightColor: {r: 0.9716981, g: 0.9313199, b: 0, a: 1}
+      PrimaryLightIntensity: 1
     - TimeOfDay: Dusk
+      PrimaryLightColor: {r: 0.9716981, g: 0.9313199, b: 0, a: 1}
+      PrimaryLightIntensity: 1
     - TimeOfDay: Night
+      PrimaryLightColor: {r: 0.9716981, g: 0.9313199, b: 0, a: 1}
+      PrimaryLightIntensity: 1

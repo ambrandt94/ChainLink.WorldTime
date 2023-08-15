@@ -80,7 +80,9 @@ namespace ChainLink.WorldTime
         {
             Target.TotalSecondsInSegments = EditorGUILayout.FloatField("Seconds in Segments:", Target.TotalSecondsInSegments);
             Target.TimeIsActive = EditorGUILayout.Toggle("Time Active:", Target.TimeIsActive);
-            EditorGUILayout.LabelField("Day Ratio: " + Target.PreciseTimeOfDayRatio.ToString("0.000"));
+            EditorGUILayout.LabelField("Precise Time of Day Ratio: " + Target.PreciseTimeOfDayRatio.ToString("0.000"));
+            EditorGUILayout.LabelField("Time of Day Ratio: " + Target.TimeOfDayRatio.ToString("0.000"));
+            EditorGUILayout.LabelField("Time Segment Ratio: " + Target.TimeSegmentRatio.ToString("0.000"));
         }
 
         void DrawModificationButtons()
